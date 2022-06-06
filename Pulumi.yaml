@@ -1,3 +1,4 @@
 name: salinesel.in
 runtime: go
 description: A personal static site for salineselin
+main: pulumi/
