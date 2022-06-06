@@ -3,9 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: salinesel-in
 spec:
-  storageClassName: standard-rwo
+  storageClassName: ""
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
+  volumeName: salinesel-in
   resources:
     requests:
-      storage: 500Gi
+      storage: 1Gi
