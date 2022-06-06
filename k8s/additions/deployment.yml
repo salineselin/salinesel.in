@@ -20,10 +20,15 @@ spec:
               cpu: "500m"
           ports:
             - containerPort: 8080
-          volumeMounts:
-            - mountPath: /src
-              name: salinesel-in
-      volumes:
-        - name: salinesel-in
-          persistentVolumeClaim:
-            claimName: salinesel-in
+      initContainers:
+        - name: gcsfuse-mounter
+          image: levkuznetsov/gcsfuse-docker:latest
+          command: ["gcsfuse", "--foreground", "bucket-name", "/src"]
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - SYS_ADMIN
+          envFrom:
+            - secretRef:
+                name: salinesel-in

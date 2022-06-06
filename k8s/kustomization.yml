@@ -8,5 +8,4 @@ bases:
   - additions/deployment.yml
   - additions/service.yml
   - additions/ingress.yml
-  - additions/persistentVolume.yml
-  - additions/persistentVolumeClaim.yml
+  - additions/secret.yml
