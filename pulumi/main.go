@@ -30,8 +30,8 @@ func main() {
 		_, err = storage.NewBucketIAMMember(ctx, "give-sa-bucket-permissions", &storage.BucketIAMMemberArgs{
 			Bucket: bucket.Name,
 			Role:   pulumi.String("roles/storage.admin"),
-			Member: sa.Name.ApplyT(func(Name string) string {
-				return "serviceAccount:" + Name
+			Member: sa.Email.ApplyT(func(Email string) string {
+				return "serviceAccount:" + Email
 			}).(pulumi.StringOutput),
 		})
 		if err != nil {
