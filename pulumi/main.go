@@ -25,6 +25,8 @@ func main() {
 		if err != nil {
 			return err
 		}
+		// log its name
+		ctx.Export("serviceaccount", sa.Email)
 
 		// give the serviceaccount permissions to read the bucket
 		_, err = storage.NewBucketIAMMember(ctx, "give-sa-bucket-permissions", &storage.BucketIAMMemberArgs{
