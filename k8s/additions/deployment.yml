@@ -23,7 +23,7 @@ spec:
       initContainers:
         - name: gcsfuse-mounter
           image: levkuznetsov/gcsfuse-docker:latest
-          command: ["gcsfuse", "--foreground", "bucket-name", "/src"]
+          command: ["gcsfuse", "--foreground", "salinesel-in-30df37b", "/src"]
           securityContext:
             privileged: true
             capabilities:
