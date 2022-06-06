@@ -22,7 +22,7 @@ func main() {
 					Network: pulumi.String("default"),
 				},
 			},
-			Tier: pulumi.String("PREMIUM"),
+			Tier: pulumi.String("STANDARD"),
 		})
 		if err != nil {
 			return err
