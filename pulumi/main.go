@@ -25,6 +25,7 @@ func main() {
 		if err != nil {
 			return err
 		}
+
 		// log its name
 		ctx.Export("serviceaccount", sa.Email)
 
@@ -39,6 +40,17 @@ func main() {
 		if err != nil {
 			return err
 		}
+
+		// create a json key for the serviceaccount
+		key, err := serviceaccount.NewKey(ctx, "create-sa-json-key", &serviceaccount.KeyArgs{
+			ServiceAccountId: sa.Name,
+		})
+		if err != nil {
+			return err
+		}
+
+		// log the json key
+		ctx.Export("json key", key.PrivateKey)
 		return nil
 	})
 }
