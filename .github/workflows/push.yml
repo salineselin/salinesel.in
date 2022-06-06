@@ -30,7 +30,6 @@ jobs:
       - id: pulumi-run
         uses: pulumi/actions@v3
         with:
-          working-directory: "./pulumi"
           command: up
           stack-name: prod
         env:
