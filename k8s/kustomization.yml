@@ -4,6 +4,9 @@ kind: Kustomization
 namespace: salinesel.in
 
 bases:
+  - additions/namespace.yml
   - additions/deployment.yml
   - additions/service.yml
   - additions/ingress.yml
+  - additions/persistentVolume.yml
+  - additions/persistentVolumeClaim.yml

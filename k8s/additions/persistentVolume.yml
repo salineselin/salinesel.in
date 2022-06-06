@@ -3,7 +3,7 @@ kind: PersistentVolume
 metadata:
   name: pv-demo
 spec:
-  storageClassName: "regionalpd-storageclass"
+  storageClassName: standard-rwo
   capacity:
     storage: 500Gi
   accessModes:
@@ -11,6 +11,8 @@ spec:
   claimRef:
     namespace: salinesel.in
     name: salinesel.in
+  gcePersistentDisk:
+    pdName: salineselin-a263a68
   csi:
     driver: pd.csi.storage.gke.io
     volumeHandle: projects/elite-protocol-319303/zones/us-west3-c/disks/salineselin-a263a68
