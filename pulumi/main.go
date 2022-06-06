@@ -40,15 +40,6 @@ func main() {
 		if err != nil {
 			return err
 		}
-
-		// create a json key for the serviceaccount
-		_, err = serviceaccount.NewKey(ctx, "create-sa-json-key", &serviceaccount.KeyArgs{
-			ServiceAccountId: sa.Name,
-		})
-		if err != nil {
-			return err
-		}
-
 		return nil
 	})
 }
