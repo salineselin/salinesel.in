@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapp
+  name: salinesel.in
 spec:
   selector:
     matchLabels:
-      app: myapp
+      app: salinesel.in
   template:
     metadata:
       labels:
-        app: myapp
+        app: salinesel.in
     spec:
       containers:
-        - name: myapp
-          image: <Image>
+        - name: salinesel.in
+          image: klakegg/hugo:0.93.2
           resources:
             limits:
               memory: "128Mi"
               cpu: "500m"
           ports:
-            - containerPort: <Port>
+            - containerPort: 80
