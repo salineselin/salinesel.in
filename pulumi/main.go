@@ -8,7 +8,7 @@ import (
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// create a GCP disk that will be mapped as a pvc in kubernetes
-		_, err := compute.NewDisk(ctx, "salinesel dot in website disk", &compute.DiskArgs{
+		_, err := compute.NewDisk(ctx, "salineselin", &compute.DiskArgs{
 			Size:        pulumi.IntPtr(50),
 			Zone:        pulumi.String("us-west3-c"),
 			Description: pulumi.String("disk for hosting static site"),
