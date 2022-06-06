@@ -1,8 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: salinesel.in
-  namespace: salinesel.in
+  name: salinesel-in
 spec:
   storageClassName: standard-rwo
   accessModes:
