@@ -11,5 +11,6 @@ spec:
   claimRef:
     namespace: salinesel-in
     name: salinesel-in
-  gcePersistentDisk:
-    pdName: salineselin-a263a68
+  nfs:
+    path: /staticsite
+    server:
