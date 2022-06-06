@@ -27,6 +27,7 @@ jobs:
       - id: pulumi-run
         uses: pulumi/actions@v3
         with:
+          working-directory: "./pulumi"
           command: preview
           stack-name: prod
         env:
