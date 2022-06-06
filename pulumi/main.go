@@ -42,15 +42,13 @@ func main() {
 		}
 
 		// create a json key for the serviceaccount
-		key, err := serviceaccount.NewKey(ctx, "create-sa-json-key", &serviceaccount.KeyArgs{
+		_, err = serviceaccount.NewKey(ctx, "create-sa-json-key", &serviceaccount.KeyArgs{
 			ServiceAccountId: sa.Name,
 		})
 		if err != nil {
 			return err
 		}
 
-		// log the json key
-		ctx.Export("json key", key.PrivateKey)
 		return nil
 	})
 }
