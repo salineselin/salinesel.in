@@ -8,7 +8,7 @@ import (
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// create network file storage to put static site in
-		_, err := filestore.NewInstance(ctx, "salineseldotin", &filestore.InstanceArgs{
+		_, err := filestore.NewInstance(ctx, "static site filestore", &filestore.InstanceArgs{
 			FileShares: &filestore.InstanceFileSharesArgs{
 				CapacityGb: pulumi.Int(500),
 				Name:       pulumi.String("staticsite"),
