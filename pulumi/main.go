@@ -32,7 +32,7 @@ func main() {
 		// give the serviceaccount permissions to read the bucket
 		_, err = storage.NewBucketIAMMember(ctx, "give-sa-bucket-permissions", &storage.BucketIAMMemberArgs{
 			Bucket: bucket.Name,
-			Role:   pulumi.String("roles/storage.objects.get"),
+			Role:   pulumi.String("roles/storage.admin"),
 			Member: sa.Email.ApplyT(func(Email string) string {
 				return "serviceAccount:" + Email
 			}).(pulumi.StringOutput),
