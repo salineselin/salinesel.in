@@ -46,6 +46,7 @@ spec:
       containers:
         - name: salinesel-in
           image: klakegg/hugo:0.93.2
+          workingDir: /mnt
           resources:
             limits:
               memory: "128Mi"
