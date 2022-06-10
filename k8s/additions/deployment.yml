@@ -9,7 +9,7 @@ spec:
   template:
     metadata:
       annotations:
-        container.apparmor.security.beta.kubernetes.io/salinesel-in: localhost/fuse
+        container.apparmor.security.beta.kubernetes.io/gcsfuse: localhost/fuse
       labels:
         app: salinesel-in
     spec:
@@ -18,7 +18,7 @@ spec:
           secret:
             secretName: salinesel-in
       initContainers:
-        - name: salinesel-in
+        - name: gcsfuse
           image: levkuznetsov/gcsfuse-docker:latest
           command:
             - gcsfuse
