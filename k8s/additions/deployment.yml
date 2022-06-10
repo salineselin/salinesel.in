@@ -8,9 +8,41 @@ spec:
       app: salinesel-in
   template:
     metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/salinesel-in: localhost/fuse
       labels:
         app: salinesel-in
     spec:
+      volumes:
+        - name: creds
+          secret:
+            secretName: salinesel-in
+      initContainers:
+        - name: salinesel-in
+          image: levkuznetsov/gcsfuse-docker:latest
+          command:
+            - gcsfuse
+          args:
+            - salinesel-in-30df37b
+            - /mnt
+          securityContext:
+            capabilities:
+              add:
+                - SYS_ADMIN
+          resources:
+            limits:
+              smarter-devices/fuse: 1
+              memory: 512Mi
+            requests:
+              smarter-devices/fuse: 1
+              cpu: 100m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /etc/creds
+              name: creds
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /etc/creds/credentials.json
       containers:
         - name: salinesel-in
           image: klakegg/hugo:0.93.2
@@ -20,15 +52,3 @@ spec:
               cpu: "500m"
           ports:
             - containerPort: 8080
-      initContainers:
-        - name: gcsfuse-mounter
-          image: levkuznetsov/gcsfuse-docker:latest
-          command: ["gcsfuse", "--foreground", "salinesel-in-30df37b", "/src"]
-          securityContext:
-            privileged: true
-            capabilities:
-              add:
-                - SYS_ADMIN
-          envFrom:
-            - secretRef:
-                name: salinesel-in
