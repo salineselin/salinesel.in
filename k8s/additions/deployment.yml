@@ -13,6 +13,7 @@ spec:
       labels:
         app: salinesel-in
     spec:
+      serviceAccount: salinesel-in
       volumes:
         - name: creds
           secret:
