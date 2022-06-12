@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: salinesel-in
 spec:
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: salinesel-in
@@ -13,6 +14,9 @@ spec:
       labels:
         app: salinesel-in
     spec:
+      volumes:
+        - name: web-bucket
+          emptyDir: {}
       nodeSelector:
         iam.gke.io/gke-metadata-server-enabled: "true"
       serviceAccount: salinesel-in
@@ -22,9 +26,11 @@ spec:
           command:
             - gcsfuse
           args:
+            - --implicit-dirs
             - salinesel-in-30df37b
-            - /mnt
+            - /src
           securityContext:
+            privileged: true
             capabilities:
               add:
                 - SYS_ADMIN
@@ -36,13 +42,33 @@ spec:
               smarter-devices/fuse: "1"
               cpu: 100m
               memory: 256Mi
+          volumeMounts:
+            - name: web-bucket
+              mountPath: /src
       containers:
         - name: salinesel-in
           image: klakegg/hugo:0.93.2
           workingDir: /mnt
+          command:
+            - sleep
+          args:
+            - infinity
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - SYS_ADMIN
           resources:
             limits:
               memory: "128Mi"
               cpu: "500m"
+              smarter-devices/fuse: "1"
+            requests:
+              memory: "128Mi"
+              cpu: "500m"
+              smarter-devices/fuse: "1"
           ports:
             - containerPort: 8080
+          volumeMounts:
+            - name: web-bucket
+              mountPath: /src
