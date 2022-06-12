@@ -1,4 +1,6 @@
 name: salinesel.in
-runtime: go
-description: A personal static site for salineselin
+runtime:
+  name: go
 main: pulumi/
+description: A personal static site for salineselin
+stackConfigDir: pulumi/
