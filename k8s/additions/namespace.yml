@@ -2,5 +2,3 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: salinesel-in
-  annotations:
-    iam.gke.io/gcp-service-account: salinesel-in-web@elite-protocol-319303.iam.gserviceaccount.com
