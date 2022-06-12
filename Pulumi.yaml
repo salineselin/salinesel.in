@@ -1,6 +1,6 @@
 name: salinesel.in
 runtime:
   name: go
-main: pulumi/
 description: A personal static site for salineselin
-stackConfigDir: pulumi/
+main: pulumi
+stackConfigDir: pulumi
