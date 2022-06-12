@@ -16,10 +16,6 @@ spec:
       nodeSelector:
         iam.gke.io/gke-metadata-server-enabled: "true"
       serviceAccount: salinesel-in
-      volumes:
-        - name: creds
-          secret:
-            secretName: salinesel-in
       initContainers:
         - name: gcsfuse
           image: us-west3-docker.pkg.dev/elite-protocol-319303/salinesel-in/gcsfuse:0.41.2
@@ -40,12 +36,6 @@ spec:
               smarter-devices/fuse: "1"
               cpu: 100m
               memory: 256Mi
-          volumeMounts:
-            - mountPath: /etc/creds
-              name: creds
-          env:
-            - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: /etc/creds/credentials.json
       containers:
         - name: salinesel-in
           image: klakegg/hugo:0.93.2
