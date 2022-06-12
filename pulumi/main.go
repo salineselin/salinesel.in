@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strings"
+
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/artifactregistry"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/organizations"
@@ -19,7 +21,7 @@ func main() {
 
 		// add google beta provider
 		google_beta, err := gcp.NewProvider(ctx, "google-beta", &gcp.ProviderArgs{
-			Project: pulumi.String(project.Id),
+			Project: pulumi.String(strings.TrimPrefix(project.Id, "projects/")),
 		})
 		if err != nil {
 			return err
@@ -53,7 +55,7 @@ func main() {
 			ServiceAccountId: sa.Name,
 			Role:             pulumi.String("roles/iam.workloadIdentityUser"),
 			Members: pulumi.StringArray{
-				pulumi.String("serviceAccount:" + project.Id + ".svc.id.goog[salinesel-in/salinesel-in]"),
+				pulumi.String("serviceAccount:" + strings.TrimPrefix(project.Id, "projects/") + ".svc.id.goog[salinesel-in/salinesel-in]"),
 			},
 		})
 		if err != nil {
