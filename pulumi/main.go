@@ -19,7 +19,7 @@ func main() {
 
 		// add google beta provider
 		google_beta, err := gcp.NewProvider(ctx, "google-beta", &gcp.ProviderArgs{
-			Project: pulumi.String(project.Name),
+			Project: pulumi.String(project.Id),
 		})
 		if err != nil {
 			return err
