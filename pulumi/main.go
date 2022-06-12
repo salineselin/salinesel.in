@@ -39,9 +39,6 @@ func main() {
 			return err
 		}
 
-		// log its name
-		ctx.Export("serviceaccount", sa.Email)
-
 		// stub in the serviceaccount string in front of the serviceaccounts email
 		saWithPrefix := sa.Email.ApplyT(func(Email string) string {
 			return "serviceAccount:" + Email
