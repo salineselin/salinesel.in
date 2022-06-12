@@ -9,3 +9,4 @@ bases:
   - additions/service.yml
   - additions/ingress.yml
   - additions/secret.yml
+  - additions/serviceaccount.yml
