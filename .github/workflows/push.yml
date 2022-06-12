@@ -21,6 +21,7 @@ jobs:
 
       - id: download-modules
         run: go mod download
+        working-directory: pulumi
 
       - id: gcp-auth
         uses: google-github-actions/auth@v0.4.0
@@ -34,3 +35,4 @@ jobs:
           stack-name: prod
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        working-directory: pulumi
