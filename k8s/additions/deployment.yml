@@ -22,7 +22,7 @@ spec:
             secretName: salinesel-in
       initContainers:
         - name: gcsfuse
-          image: levkuznetsov/gcsfuse-docker:latest
+          image: us-west3-docker.pkg.dev/elite-protocol-319303/salinesel-in/gcsfuse:0.41.2
           command:
             - gcsfuse
           args:
@@ -34,10 +34,10 @@ spec:
                 - SYS_ADMIN
           resources:
             limits:
-              smarter-devices/fuse: 1
+              smarter-devices/fuse: "1"
               memory: 512Mi
             requests:
-              smarter-devices/fuse: 1
+              smarter-devices/fuse: "1"
               cpu: 100m
               memory: 256Mi
           volumeMounts:
