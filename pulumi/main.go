@@ -3,19 +3,23 @@ package main
 import (
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/artifactregistry"
+	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/organizations"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/serviceaccount"
-
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/storage"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
+		// get complete project metadata used by functions
+		project, err := organizations.LookupProject(ctx, nil, nil)
+		if err != nil {
+			return err
+		}
+
 		// add google beta provider
-		projectName := config.Get(ctx, "gcp:project")
 		google_beta, err := gcp.NewProvider(ctx, "google-beta", &gcp.ProviderArgs{
-			Project: pulumi.String(projectName),
+			Project: pulumi.String(project.Name),
 		})
 		if err != nil {
 			return err
@@ -43,6 +47,18 @@ func main() {
 		saWithPrefix := sa.Email.ApplyT(func(Email string) string {
 			return "serviceAccount:" + Email
 		}).(pulumi.StringOutput)
+
+		// make the serviceaccount a workload identity user
+		_, err = serviceaccount.NewIAMBinding(ctx, "make-sa-workload-identity-user", &serviceaccount.IAMBindingArgs{
+			ServiceAccountId: sa.Name,
+			Role:             pulumi.String("roles/iam.workloadIdentityUser"),
+			Members: pulumi.StringArray{
+				pulumi.String("serviceAccount:" + project.Id + ".svc.id.goog[salinesel-in/salinesel-in]"),
+			},
+		})
+		if err != nil {
+			return err
+		}
 
 		// give the serviceaccount permissions to read the website bucket
 		_, err = storage.NewBucketIAMMember(ctx, "give-sa-bucket-permissions", &storage.BucketIAMMemberArgs{
