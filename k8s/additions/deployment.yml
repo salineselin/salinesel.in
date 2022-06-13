@@ -48,7 +48,7 @@ spec:
       containers:
         - name: salinesel-in
           image: klakegg/hugo:0.93.2
-          workingDir: /mnt
+          workingDir: /src
           command:
             - sleep
           args:
