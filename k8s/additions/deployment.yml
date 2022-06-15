@@ -22,8 +22,11 @@ spec:
           image: us-west3-docker.pkg.dev/elite-protocol-319303/salinesel-in/gcsfuse-hugo:0.41.2
           workingDir: /src
           command:
-            - gcsfuse --implicit-dirs salinesel-in-30df37b /src
-            - hugo server -D
+            - /bin/bash
+            - -c
+            - --
+          args:
+            - gcsfuse --implicit-dirs salinesel-in-30df37b /src && hugo server -D
           securityContext:
             privileged: true
             capabilities:
