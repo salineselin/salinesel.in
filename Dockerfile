@@ -1,7 +1,6 @@
 # build a container with both gcsfuse and hugo
 FROM amd64/debian:stable
 
-# install fuse and curl to get latest specific releases.
 # I could have used apt-get to install both gcsfuse and hugo, but I prefer to pull the releases directly from github 
 ENV GCSFUSE_VERSION 0.27.0
 ENV HUGO_VERSION 0.100.2
