@@ -47,29 +47,6 @@ func main() {
 			Name:                     pulumi.String(name),
 			ForceDestroy:             pulumi.Bool(true),
 			UniformBucketLevelAccess: pulumi.Bool(true),
-			Website: &storage.BucketWebsiteArgs{
-				MainPageSuffix: pulumi.String("index.html"),
-				NotFoundPage:   pulumi.String("404.html"),
-			},
-			Cors: storage.BucketCorArray{
-				&storage.BucketCorArgs{
-					MaxAgeSeconds: pulumi.Int(3600),
-					Methods: pulumi.StringArray{
-						pulumi.String("GET"),
-						pulumi.String("HEAD"),
-						pulumi.String("PUT"),
-						pulumi.String("POST"),
-						pulumi.String("DELETE"),
-					},
-					Origins: pulumi.StringArray{
-						pulumi.String("http://" + site.domain),
-						pulumi.String("https://" + site.domain),
-					},
-					ResponseHeaders: pulumi.StringArray{
-						pulumi.String("*"),
-					},
-				},
-			},
 		})
 		if err != nil {
 			return err
