@@ -19,7 +19,33 @@ func main() {
 
 		// Create a GCP resource (Storage Bucket)
 		bucket, err := storage.NewBucket(ctx, "salinesel-in", &storage.BucketArgs{
-			Location: pulumi.String("US"),
+			Location:                 pulumi.String("US"),
+			Name:                     pulumi.String("salinesel-in"),
+			ForceDestroy:             pulumi.Bool(true),
+			UniformBucketLevelAccess: pulumi.Bool(true),
+			Website: &storage.BucketWebsiteArgs{
+				MainPageSuffix: pulumi.String("index.html"),
+				NotFoundPage:   pulumi.String("404.html"),
+			},
+			Cors: storage.BucketCorArray{
+				&storage.BucketCorArgs{
+					MaxAgeSeconds: pulumi.Int(3600),
+					Methods: pulumi.StringArray{
+						pulumi.String("GET"),
+						pulumi.String("HEAD"),
+						pulumi.String("PUT"),
+						pulumi.String("POST"),
+						pulumi.String("DELETE"),
+					},
+					Origins: pulumi.StringArray{
+						pulumi.String("http://salinesel.in"),
+						pulumi.String("https://salinesel.in"),
+					},
+					ResponseHeaders: pulumi.StringArray{
+						pulumi.String("*"),
+					},
+				},
+			},
 		})
 		if err != nil {
 			return err
@@ -63,6 +89,9 @@ func main() {
 			return err
 		}
 
+		// give the serviceaccount permissions to create and remove DNS records in the salinesel.in domain
+
+		// create a DNS record binding the bucket to a domain
 		return nil
 	})
 }
