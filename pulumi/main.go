@@ -51,6 +51,21 @@ func main() {
 			return err
 		}
 
+		// add the 404 and index html pages
+		pages := [...]string{
+			"index.html",
+			"404.html",
+		}
+		for _, page := range pages {
+			_, err = storage.NewBucketObject(ctx, page, &storage.BucketObjectArgs{
+				Bucket: bucket.Name,
+				Source: pulumi.NewFileAsset(page),
+			})
+			if err != nil {
+				return err
+			}
+		}
+
 		// Create a serviceaccount
 		saName := "salinesel-in-web"
 		sa, err := serviceaccount.NewAccount(ctx, saName, &serviceaccount.AccountArgs{
