@@ -135,7 +135,6 @@ func main() {
 			return err
 		}
 
-		// create a DNS record binding the bucket to a domain
 		return nil
 	})
 }
