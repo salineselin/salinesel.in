@@ -33,7 +33,6 @@ func main() {
 			projectId          string
 		}{
 			bucketName:         base,
-			backendBucketName:  base + "-backendbucket",
 			serviceaccountName: base + "-web",
 			domain:             domain,
 			apexDomain:         strings.Split(domain, ".")[0],
@@ -41,10 +40,46 @@ func main() {
 			projectId:          strings.TrimPrefix(project.Id, "projects/"), // remove projects/ prefix on project id
 		}
 
-		// create storage bucket
-		bucket, err := storage.NewBucket(ctx, site.bucketName, &storage.BucketArgs{
+		// create storage bucket for caching certificates
+		name := fmt.Sprintf("%s-bucket-certs", site.bucketName)
+		_, err = storage.NewBucket(ctx, name, &storage.BucketArgs{
 			Location:                 pulumi.String("US"),
-			Name:                     pulumi.String(site.bucketName),
+			Name:                     pulumi.String(name),
+			ForceDestroy:             pulumi.Bool(true),
+			UniformBucketLevelAccess: pulumi.Bool(true),
+			Website: &storage.BucketWebsiteArgs{
+				MainPageSuffix: pulumi.String("index.html"),
+				NotFoundPage:   pulumi.String("404.html"),
+			},
+			Cors: storage.BucketCorArray{
+				&storage.BucketCorArgs{
+					MaxAgeSeconds: pulumi.Int(3600),
+					Methods: pulumi.StringArray{
+						pulumi.String("GET"),
+						pulumi.String("HEAD"),
+						pulumi.String("PUT"),
+						pulumi.String("POST"),
+						pulumi.String("DELETE"),
+					},
+					Origins: pulumi.StringArray{
+						pulumi.String("http://" + site.domain),
+						pulumi.String("https://" + site.domain),
+					},
+					ResponseHeaders: pulumi.StringArray{
+						pulumi.String("*"),
+					},
+				},
+			},
+		})
+		if err != nil {
+			return err
+		}
+
+		// create storage bucket
+		name = fmt.Sprintf("%s-bucket", site.bucketName)
+		bucket, err := storage.NewBucket(ctx, name, &storage.BucketArgs{
+			Location:                 pulumi.String("US"),
+			Name:                     pulumi.String(name),
 			ForceDestroy:             pulumi.Bool(true),
 			UniformBucketLevelAccess: pulumi.Bool(true),
 			Website: &storage.BucketWebsiteArgs{
@@ -76,7 +111,7 @@ func main() {
 		}
 
 		// allow people online to view the contents of the bucket
-		name := fmt.Sprintf("%s-bucket-iambinding", site.bucketName)
+		name = fmt.Sprintf("%s-bucket-iambinding", site.bucketName)
 		_, err = storage.NewBucketIAMBinding(ctx, name, &storage.BucketIAMBindingArgs{
 			Bucket: bucket.Name,
 			Role:   pulumi.String("roles/storage.objectViewer"),
@@ -105,10 +140,10 @@ func main() {
 		}
 
 		// create a backend bucket associated with the storage bucket
-		name = site.backendBucketName
+		name = fmt.Sprintf("%s-backendbucket", site.bucketName)
 		backendBucket, err := compute.NewBackendBucket(ctx, name, &compute.BackendBucketArgs{
-			Name:       pulumi.String(site.backendBucketName),
-			BucketName: pulumi.String(site.bucketName),
+			Name:       pulumi.String(name),
+			BucketName: bucket.Name,
 			EnableCdn:  pulumi.Bool(true),
 		})
 		if err != nil {
@@ -140,6 +175,7 @@ func main() {
 
 		// create url map for backend bucket
 		// https://www.pulumi.com/registry/packages/gcp/api-docs/compute/targethttpsproxy/
+		// https://stackoverflow.com/questions/66161921/setting-up-load-balancer-frontend-with-on-gcp-with-pulumi
 		name = fmt.Sprintf("%s-urlmap", site.domain)
 		urlmap, err := compute.NewURLMap(ctx, name, &compute.URLMapArgs{
 			DefaultService: backendBucket.ID(),
