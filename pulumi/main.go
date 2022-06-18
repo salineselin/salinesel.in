@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/organizations"
+	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/projects"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/serviceaccount"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/storage"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
@@ -16,6 +17,8 @@ func main() {
 		if err != nil {
 			return err
 		}
+		// remove projects/ prefix on project id
+		projectId := strings.TrimPrefix(project.Id, "projects/")
 
 		// Create a GCP resource (Storage Bucket)
 		bucket, err := storage.NewBucket(ctx, "salinesel-in", &storage.BucketArgs{
@@ -51,6 +54,18 @@ func main() {
 			return err
 		}
 
+		// allow people online to view the contents of the bucket
+		_, err = storage.NewBucketIAMBinding(ctx, "salinesel-in-bucket-iambinding", &storage.BucketIAMBindingArgs{
+			Bucket: bucket.Name,
+			Role:   pulumi.String("roles/storage.objectViewer"),
+			Members: pulumi.StringArray{
+				pulumi.String("allUsers"),
+			},
+		})
+		if err != nil {
+			return err
+		}
+
 		// add the 404 and index html pages
 		pages := [...]string{
 			"index.html",
@@ -58,8 +73,9 @@ func main() {
 		}
 		for _, page := range pages {
 			_, err = storage.NewBucketObject(ctx, page, &storage.BucketObjectArgs{
-				Bucket: bucket.Name,
-				Source: pulumi.NewFileAsset(page),
+				Bucket:      bucket.Name,
+				ContentType: pulumi.String("text/html"),
+				Source:      pulumi.NewFileAsset(page),
 			})
 			if err != nil {
 				return err
@@ -87,14 +103,14 @@ func main() {
 			ServiceAccountId: sa.Name,
 			Role:             pulumi.String("roles/iam.workloadIdentityUser"),
 			Members: pulumi.StringArray{
-				pulumi.String("serviceAccount:" + strings.TrimPrefix(project.Id, "projects/") + ".svc.id.goog[salinesel-in/salinesel-in]"),
+				pulumi.String("serviceAccount:" + projectId + ".svc.id.goog[salinesel-in/salinesel-in]"),
 			},
 		})
 		if err != nil {
 			return err
 		}
 
-		// give the serviceaccount permissions to read the website bucket
+		// give the serviceaccount permissions to read and write to the website bucket for CI
 		_, err = storage.NewBucketIAMMember(ctx, "give-sa-bucket-permissions", &storage.BucketIAMMemberArgs{
 			Bucket: bucket.Name,
 			Role:   pulumi.String("roles/storage.admin"),
@@ -105,6 +121,19 @@ func main() {
 		}
 
 		// give the serviceaccount permissions to create and remove DNS records in the salinesel.in domain
+		_, err = projects.NewIAMMember(ctx, "give-sa-dns-rw", &projects.IAMMemberArgs{
+			Project: pulumi.String(projectId),
+			Role:    pulumi.String("roles/dns.admin"),
+			Member:  saWithPrefix,
+			Condition: &projects.IAMMemberConditionArgs{
+				Description: pulumi.String("only for the salinesel.in zone"),
+				Title:       pulumi.String("only-salinesel.in"),
+				Expression:  pulumi.String("resource.name == \"salinesel-in\""),
+			},
+		})
+		if err != nil {
+			return err
+		}
 
 		// create a DNS record binding the bucket to a domain
 		return nil
