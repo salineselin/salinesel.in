@@ -189,8 +189,13 @@ func main() {
 
 		// create an SSL certificate to encrypt the frontend
 		name = fmt.Sprintf("%s-ssl-cert", site.domain)
-		sslCert, err := compute.NewSSLCertificate(ctx, name, &compute.SSLCertificateArgs{
-			NamePrefix: pulumi.String(site.bucketName),
+		cert, err := compute.NewManagedSslCertificate(ctx, name, &compute.ManagedSslCertificateArgs{
+			Name: pulumi.String(name),
+			Managed: compute.ManagedSslCertificateManagedArgs{
+				Domains: pulumi.StringArray{
+					pulumi.String(site.domain),
+				},
+			},
 		})
 		if err != nil {
 			return err
@@ -201,7 +206,7 @@ func main() {
 		_, err = compute.NewTargetHttpsProxy(ctx, name, &compute.TargetHttpsProxyArgs{
 			UrlMap: urlmap.ID(),
 			SslCertificates: pulumi.StringArray{
-				sslCert.ID(),
+				cert.ID(),
 			},
 		})
 		if err != nil {
