@@ -159,7 +159,7 @@ func main() {
 			HostRules: compute.URLMapHostRuleArray{
 				&compute.URLMapHostRuleArgs{
 					Hosts: pulumi.StringArray{
-						pulumi.String(site.apexDomain),
+						pulumi.String(site.domain),
 					},
 					PathMatcher: pulumi.String(site.apexDomain),
 				},
@@ -167,7 +167,7 @@ func main() {
 			PathMatchers: compute.URLMapPathMatcherArray{
 				&compute.URLMapPathMatcherArgs{
 					Name:           pulumi.String(site.apexDomain),
-					DefaultService: backendService.ID(),
+					DefaultService: backendBucket.ID(),
 					PathRules: compute.URLMapPathMatcherPathRuleArray{
 						&compute.URLMapPathMatcherPathRuleArgs{
 							Service: backendService.ID(),
