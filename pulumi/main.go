@@ -178,10 +178,6 @@ func main() {
 					},
 				},
 			},
-			DefaultUrlRedirect: compute.URLMapDefaultUrlRedirectArgs{
-				StripQuery:    pulumi.Bool(false),
-				HttpsRedirect: pulumi.Bool(false),
-			},
 		})
 		if err != nil {
 			return err
