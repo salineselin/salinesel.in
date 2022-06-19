@@ -128,7 +128,7 @@ func main() {
 		}
 
 		// create a health check
-		name = fmt.Sprintf("%s-healthcheck", site.domain)
+		name = fmt.Sprintf("%s-healthcheck", site.bucketName)
 		healthCheck, err := compute.NewHttpHealthCheck(ctx, name, &compute.HttpHealthCheckArgs{
 			RequestPath:      pulumi.String("/"),
 			CheckIntervalSec: pulumi.Int(1),
@@ -139,7 +139,7 @@ func main() {
 		}
 
 		// create a http backendservice
-		name = fmt.Sprintf("%s-backendservice", site.domain)
+		name = fmt.Sprintf("%s-backendservice", site.bucketName)
 		backendService, err := compute.NewBackendService(ctx, name, &compute.BackendServiceArgs{
 			PortName:     pulumi.String("http"),
 			Protocol:     pulumi.String("HTTP"),
@@ -153,7 +153,7 @@ func main() {
 		// create url map for backend bucket
 		// https://www.pulumi.com/registry/packages/gcp/api-docs/compute/targethttpsproxy/
 		// https://stackoverflow.com/questions/66161921/setting-up-load-balancer-frontend-with-on-gcp-with-pulumi
-		name = fmt.Sprintf("%s-urlmap", site.domain)
+		name = fmt.Sprintf("%s-urlmap", site.bucketName)
 		urlmap, err := compute.NewURLMap(ctx, name, &compute.URLMapArgs{
 			DefaultService: backendBucket.ID(),
 			HostRules: compute.URLMapHostRuleArray{
@@ -188,7 +188,7 @@ func main() {
 		}
 
 		// create an SSL certificate to encrypt the frontend
-		name = fmt.Sprintf("%s-ssl-cert", site.domain)
+		name = fmt.Sprintf("%s-ssl-cert", site.bucketName)
 		cert, err := compute.NewManagedSslCertificate(ctx, name, &compute.ManagedSslCertificateArgs{
 			Name: pulumi.String(name),
 			Managed: compute.ManagedSslCertificateManagedArgs{
@@ -202,7 +202,7 @@ func main() {
 		}
 
 		// bind the https certificate to a load balancer
-		name = fmt.Sprintf("%s-https-proxy", site.domain)
+		name = fmt.Sprintf("%s-https-proxy", site.bucketName)
 		_, err = compute.NewTargetHttpsProxy(ctx, name, &compute.TargetHttpsProxyArgs{
 			UrlMap: urlmap.ID(),
 			SslCertificates: pulumi.StringArray{
@@ -230,7 +230,7 @@ func main() {
 		}).(pulumi.StringOutput)
 
 		// make the serviceaccount a workload identity user
-		name = fmt.Sprintf("make-%s-workload-identity-user", site.serviceaccountName)
+		name = fmt.Sprintf("give-%s-workload-identity-user", site.serviceaccountName)
 		_, err = serviceaccount.NewIAMMember(ctx, name, &serviceaccount.IAMMemberArgs{
 			ServiceAccountId: sa.Name,
 			Role:             pulumi.String("roles/iam.workloadIdentityUser"),
@@ -259,7 +259,7 @@ func main() {
 			Member:  saWithPrefix,
 			Condition: &projects.IAMMemberConditionArgs{
 				Description: pulumi.Sprintf("only for the %s zone", site.domain),
-				Title:       pulumi.Sprintf("only-%s", site.domain),
+				Title:       pulumi.Sprintf("only-%s", site.bucketName),
 				Expression:  pulumi.Sprintf("resource.name == \"%s\"", site.bucketName),
 			},
 		})
