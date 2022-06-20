@@ -40,20 +40,8 @@ func main() {
 			projectId:          strings.TrimPrefix(project.Id, "projects/"), // remove projects/ prefix on project id
 		}
 
-		// create storage bucket for caching certificates
-		name := fmt.Sprintf("%s-bucket-certs", site.bucketName)
-		_, err = storage.NewBucket(ctx, name, &storage.BucketArgs{
-			Location:                 pulumi.String("US"),
-			Name:                     pulumi.String(name),
-			ForceDestroy:             pulumi.Bool(true),
-			UniformBucketLevelAccess: pulumi.Bool(true),
-		})
-		if err != nil {
-			return err
-		}
-
 		// create storage bucket
-		name = fmt.Sprintf("%s-bucket", site.bucketName)
+		name := fmt.Sprintf("%s-bucket", site.bucketName)
 		bucket, err := storage.NewBucket(ctx, name, &storage.BucketArgs{
 			Location:                 pulumi.String("US"),
 			Name:                     pulumi.String(name),
