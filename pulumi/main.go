@@ -197,6 +197,33 @@ func main() {
 			return err
 		}
 
+		// create an IP address
+		name = fmt.Sprintf("%s-ip-address", site.bucketName)
+		ip, err := compute.NewAddress(ctx, name, &compute.AddressArgs{})
+		if err != nil {
+			return err
+		}
+
+		// create a fowarding rule
+		name = fmt.Sprintf("%s-forwarding-rule", site.bucketName)
+		_, err = compute.NewForwardingRule(ctx, name, &compute.ForwardingRuleArgs{
+			Region:            pulumi.String("us-west3"),
+			NetworkTier:       pulumi.String("STANDARD"),
+			IpAddress:         ip.Address,
+			AllowGlobalAccess: pulumi.Bool(true),
+			Ports: pulumi.StringArray{
+				pulumi.String("80"),
+				pulumi.String("443"),
+			},
+		})
+		if err != nil {
+			return err
+		}
+
+		// get the existing salinesel.in zone
+
+		// create a dns record mapping the ip address to salinesel.in
+
 		// Create a serviceaccount
 		name = site.serviceaccountName
 		sa, err := serviceaccount.NewAccount(ctx, name, &serviceaccount.AccountArgs{
