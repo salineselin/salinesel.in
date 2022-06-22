@@ -109,7 +109,7 @@ func main() {
 		backendBucket, err := compute.NewBackendBucket(ctx, name, &compute.BackendBucketArgs{
 			Name:       pulumi.String(name),
 			BucketName: bucket.Name,
-			EnableCdn:  pulumi.Bool(true),
+			EnableCdn:  pulumi.Bool(false),
 		})
 		if err != nil {
 			return err
@@ -187,7 +187,7 @@ func main() {
 
 		// bind the https certificate to a load balancer
 		name = fmt.Sprintf("%s-https-proxy", site.bucketName)
-		_, err = compute.NewTargetHttpsProxy(ctx, name, &compute.TargetHttpsProxyArgs{
+		proxy, err := compute.NewTargetHttpsProxy(ctx, name, &compute.TargetHttpsProxyArgs{
 			UrlMap: urlmap.ID(),
 			SslCertificates: pulumi.StringArray{
 				cert.ID(),
@@ -199,22 +199,36 @@ func main() {
 
 		// create an IP address
 		name = fmt.Sprintf("%s-ip-address", site.bucketName)
-		ip, err := compute.NewAddress(ctx, name, &compute.AddressArgs{})
+		ip, err := compute.NewAddress(ctx, name, &compute.AddressArgs{
+			Region: pulumi.String("us-west3"),
+		})
 		if err != nil {
 			return err
 		}
 
 		// create a fowarding rule
 		name = fmt.Sprintf("%s-forwarding-rule", site.bucketName)
-		_, err = compute.NewForwardingRule(ctx, name, &compute.ForwardingRuleArgs{
-			Region:            pulumi.String("us-west3"),
-			NetworkTier:       pulumi.String("STANDARD"),
-			IpAddress:         ip.Address,
-			AllowGlobalAccess: pulumi.Bool(true),
-			Ports: pulumi.StringArray{
-				pulumi.String("80"),
-				pulumi.String("443"),
-			},
+		// _, err = compute.NewForwardingRule(ctx, name, &compute.ForwardingRuleArgs{
+		// 	Region:            pulumi.String("us-west3"),
+		// 	IpProtocol:        pulumi.String("TCP"),
+		// 	NetworkTier:       pulumi.String("STANDARD"),
+		// 	IpAddress:         ip.Address,
+		// 	AllowGlobalAccess: pulumi.Bool(true),
+		// 	AllPorts:          pulumi.Bool(true),
+		// 	Target:            proxy.Name,
+		// 	Ports: pulumi.StringArray{
+		// 		pulumi.String("80"),
+		// 		pulumi.String("443"),
+		// 	},
+		// })
+		// if err != nil {
+		// 	return err
+		// }
+		_, err = compute.NewGlobalForwardingRule(ctx, name, &compute.GlobalForwardingRuleArgs{
+			IpAddress:           ip.Address,
+			IpProtocol:          pulumi.String("TCP"),
+			LoadBalancingScheme: pulumi.String("EXTERNAL_MANAGED"),
+			Target: ,
 		})
 		if err != nil {
 			return err
