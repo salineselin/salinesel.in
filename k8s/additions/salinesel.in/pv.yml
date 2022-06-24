@@ -8,5 +8,5 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: <ClusterIP>
+    server: nfs-server.salinesel-in.svc.cluster.local
     path: "/"
