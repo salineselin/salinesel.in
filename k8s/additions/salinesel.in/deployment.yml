@@ -43,3 +43,11 @@ spec:
               smarter-devices/fuse: "1"
           ports:
             - containerPort: 8080
+          volumeMounts:
+            - mountPath: /src
+              name: gce-disk
+      volumes:
+        - name: gce-disk
+          gcePersistentDisk:
+            pdName: salinesel-in-nfs-disk
+            fsType: ext4
