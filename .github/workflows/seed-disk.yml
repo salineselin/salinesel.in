@@ -1,0 +1,32 @@
+name: seed-disk
+on:
+  - workflow_dispatch
+
+jobs:
+  preview:
+    name: Preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: setup golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16.x
+
+      - name: download modules
+        run: go mod download
+
+      - name: gcp auth
+        uses: google-github-actions/auth@v0.4.0
+        with:
+          credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
+
+      - name: build hugo
+        run: hugo build
+
+      - name: seed the disk
+        run: |
+          POD=kubectl get pod -n salinesel-in -o jsonpath={.items..metadata.name}
+          kubectl cp /src salinesel-in/${POD}:/src
