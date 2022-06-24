@@ -4,6 +4,8 @@ metadata:
   name: salinesel-in
 spec:
   revisionHistoryLimit: 0
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: salinesel-in
