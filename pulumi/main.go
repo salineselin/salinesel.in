@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/compute"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/organizations"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/projects"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/serviceaccount"
@@ -18,15 +19,27 @@ func main() {
 			return err
 		}
 
-		// define some common attributes with an anonymous struct
-		base := "salinesel-in"
+		// define some common attributes
 		// domain := "salinesel.in"
+		base := "salinesel-in"
 		serviceaccountname := base + "-web"
 		projectId := strings.TrimPrefix(project.Id, "projects/") // remove projects/ prefix on project id
 
 		// get the existing salinesel.in zone
 		// create a dns record mapping the ip address to salinesel.in
-		// Create a serviceaccount
+
+		// create a disk to use in the GCP cluster
+		_, err = compute.NewDisk(ctx, base+"-disk", &compute.DiskArgs{
+			Zone: pulumi.String("us-west3-c"),
+			Size: pulumi.Int(10),
+			Type: pulumi.String("pd-ssd"),
+			Name: pulumi.String("salinesel-in-nfs-disk"),
+		})
+		if err != nil {
+			return err
+		}
+
+		// create a serviceaccount
 		sa, err := serviceaccount.NewAccount(ctx, serviceaccountname, &serviceaccount.AccountArgs{
 			AccountId:   pulumi.String(serviceaccountname),
 			DisplayName: pulumi.String(serviceaccountname),
