@@ -6,7 +6,6 @@ import (
 
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/compute"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/organizations"
-	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/projects"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/serviceaccount"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -20,13 +19,9 @@ func main() {
 		}
 
 		// define some common attributes
-		// domain := "salinesel.in"
 		base := "salinesel-in"
 		serviceaccountname := base + "-web"
 		projectId := strings.TrimPrefix(project.Id, "projects/") // remove projects/ prefix on project id
-
-		// get the existing salinesel.in zone
-		// create a dns record mapping the ip address to salinesel.in
 
 		// create a disk to use in the GCP cluster
 		_, err = compute.NewDisk(ctx, base+"-disk", &compute.DiskArgs{
@@ -49,11 +44,6 @@ func main() {
 			return err
 		}
 
-		// stub in the serviceaccount string in front of the serviceaccounts email
-		saWithPrefix := sa.Email.ApplyT(func(Email string) string {
-			return "serviceAccount:" + Email
-		}).(pulumi.StringOutput)
-
 		// make the serviceaccount a workload identity user
 		name := fmt.Sprintf("give-%s-workload-identity-user", serviceaccountname)
 		_, err = serviceaccount.NewIAMMember(ctx, name, &serviceaccount.IAMMemberArgs{
@@ -65,16 +55,6 @@ func main() {
 			return err
 		}
 
-		// give the serviceaccount permissions to create and remove DNS records in the salinesel.in domain
-		name = fmt.Sprintf("give-%s-dns-rw", serviceaccountname)
-		_, err = projects.NewIAMMember(ctx, name, &projects.IAMMemberArgs{
-			Project: pulumi.String(projectId),
-			Role:    pulumi.String("roles/dns.admin"),
-			Member:  saWithPrefix,
-		})
-		if err != nil {
-			return err
-		}
 		return nil
 	})
 }
