@@ -4,9 +4,11 @@ kind: Kustomization
 namespace: salinesel-in
 
 bases:
-  - additions/namespace.yml
-  - additions/deployment.yml
-  - additions/service.yml
-  - additions/ingress.yml
-  - additions/secret.yml
-  - additions/serviceaccount.yml
+  - additions/salinesel.in/namespace.yml
+  - additions/salinesel.in/deployment.yml
+  - additions/salinesel.in/service.yml
+  - additions/salinesel.in/ingress.yml
+  - additions/salinesel.in/secret.yml
+  - additions/salinesel.in/serviceaccount.yml
+  - additions/nfs/deployment.yml
+  - additions/nfs/service.yml
