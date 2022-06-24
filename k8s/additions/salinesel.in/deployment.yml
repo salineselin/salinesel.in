@@ -9,8 +9,6 @@ spec:
       app: salinesel-in
   template:
     metadata:
-      annotations:
-        container.apparmor.security.beta.kubernetes.io/salinesel-in: localhost/fuse
       labels:
         app: salinesel-in
     spec:
@@ -19,28 +17,17 @@ spec:
       serviceAccount: salinesel-in
       containers:
         - name: salinesel-in
-          image: us-west3-docker.pkg.dev/elite-protocol-319303/salinesel-in/gcsfuse-hugo:0.41.2
+          image: klakegg/hugo:0.101.0-alpine
           workingDir: /src
           command:
-            - /bin/bash
-            - -c
-            - --
-          args:
-            - gcsfuse --implicit-dirs salinesel-in-30df37b /src && hugo server -D
-          securityContext:
-            privileged: true
-            capabilities:
-              add:
-                - SYS_ADMIN
+            - hugo server -D
           resources:
             limits:
               memory: "128Mi"
               cpu: "500m"
-              smarter-devices/fuse: "1"
             requests:
               memory: "128Mi"
               cpu: "500m"
-              smarter-devices/fuse: "1"
           ports:
             - containerPort: 8080
           volumeMounts:
