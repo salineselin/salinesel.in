@@ -1,10 +1,6 @@
 name: Pulumi-push
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - pulumi/**
+  - workflow_dispatch
 
 jobs:
   update:
