@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: seed-nfs
+  namespace: salinesel-in
   labels:
     name: seed-nfs
 spec:
@@ -12,7 +13,7 @@ spec:
     - name: seed-nfs
       image: alpine:latest
       workingDir: /salinesel.in
-      command: ["/bin/bash", "-c", "--"]
+      command: ["/bin/sh", "-c", "--"]
       args: ["while true; do sleep 30; done;"]
       resources:
         limits:
