@@ -28,5 +28,6 @@ jobs:
 
       - name: seed the disk
         run: |
-          POD=kubectl get pod -n salinesel-in -o jsonpath={.items..metadata.name}
-          kubectl cp /src salinesel-in/${POD}:/src
+          NAMESPACE=salinesel-in
+          POD=kubectl get pod -n ${NAMESPACE} -o jsonpath={.items..metadata.name}
+          kubectl cp /src ${NAMESPACE}/${POD}:/src
