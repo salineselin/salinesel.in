@@ -28,6 +28,7 @@ jobs:
 
       - name: build hugo
         run: hugo
+        working-directory: salinesel.in
 
       - name: seed nfs
         run: |
