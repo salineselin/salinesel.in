@@ -19,10 +19,13 @@ spec:
       serviceAccount: salinesel-in
       containers:
         - name: salinesel-in
-          image: klakegg/hugo:0.101.0-alpine
-          workingDir: /src
-          command:
-            - hugo server -D
+          image: klakegg/hugo:0.101.0-ext-alpine
+          workingDir: /salinesel.in
+          # command:
+          #   # - hugo server -D
+          #   - /bin/bash -c -- while true; do sleep 1; done
+          command: ["/bin/bash", "-c", "--"]
+          args: ["while true; do sleep 30; done;"]
           resources:
             limits:
               memory: "128Mi"
