@@ -50,6 +50,7 @@ func main() {
 		}
 
 		// give the serviceaccount permissions to the kubernetes cluster
+		name = fmt.Sprintf("give-%s-container-developer", serviceaccountname)
 		_, err = projects.NewIAMMember(ctx, name, &projects.IAMMemberArgs{
 			Project: pulumi.String(projectId),
 			Role:    pulumi.String("roles/container.developer"),
