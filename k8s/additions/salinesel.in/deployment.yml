@@ -9,6 +9,7 @@ spec:
   selector:
     matchLabels:
       app: salinesel-in
+  replicas: 2
   template:
     metadata:
       labels:
@@ -21,8 +22,10 @@ spec:
         - name: salinesel-in
           image: klakegg/hugo:0.101.0-ext-alpine
           workingDir: /salinesel.in
-          command:
-            - hugo server -p 8080
+          # command:
+          #   - hugo server -p 8080
+          command: ["/bin/bash", "-c", "--"]
+          args: ["while true; do sleep 30; done;"]
           resources:
             limits:
               memory: "128Mi"
@@ -37,6 +40,5 @@ spec:
               name: gce-disk
       volumes:
         - name: gce-disk
-          nfs:
-            server: nfs-server.salinesel-in.svc.cluster.local
-            path: "/"
+          persistentVolumeClaim:
+            claimName: nfs

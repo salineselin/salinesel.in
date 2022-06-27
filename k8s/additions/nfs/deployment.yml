@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: nfs-server
-          image: gcr.io/google_containers/volume-nfs:0.8
+          image: k8s.gcr.io/volume-nfs:0.8
           ports:
             - name: nfs
               containerPort: 2049
@@ -30,4 +30,4 @@ spec:
       volumes:
         - name: mypvc
           persistentVolumeClaim:
-            claimName: nfs
+            claimName: nfs-pv-provisioning-demo

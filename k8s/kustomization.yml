@@ -11,6 +11,7 @@ bases:
   - additions/salinesel.in/ingress.yml
   - additions/salinesel.in/secret.yml
   - additions/salinesel.in/serviceaccount.yml
+  - additions/salinesel.in/pvc.yml
 
   # # nfs mapping
   - additions/nfs/deployment.yml

@@ -7,5 +7,8 @@ spec:
     storage: 10Gi
   accessModes:
     - ReadWriteMany
-  gcePersistentDisk:
-    pdName: salinesel-in-nfs-disk
+  nfs:
+    server: nfs-server.salinesel-in.svc.cluster.local
+    path: "/"
+  mountOptions:
+    - nfsvers=4.2
