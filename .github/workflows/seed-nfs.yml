@@ -27,7 +27,7 @@ jobs:
           credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
 
       - name: build hugo
-        run: hugo build
+        run: hugo
 
       - name: seed nfs
         run: |
