@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/compute"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/organizations"
+	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/projects"
 	"github.com/pulumi/pulumi-gcp/sdk/v6/go/gcp/serviceaccount"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -23,17 +23,6 @@ func main() {
 		serviceaccountname := base + "-web"
 		projectId := strings.TrimPrefix(project.Id, "projects/") // remove projects/ prefix on project id
 
-		// create a disk to use in the GCP cluster
-		_, err = compute.NewDisk(ctx, base+"-disk", &compute.DiskArgs{
-			Zone: pulumi.String("us-west3-c"),
-			Size: pulumi.Int(10),
-			Type: pulumi.String("pd-ssd"),
-			Name: pulumi.String("salinesel-in-nfs-disk"),
-		})
-		if err != nil {
-			return err
-		}
-
 		// create a serviceaccount
 		sa, err := serviceaccount.NewAccount(ctx, serviceaccountname, &serviceaccount.AccountArgs{
 			AccountId:   pulumi.String(serviceaccountname),
@@ -43,6 +32,11 @@ func main() {
 		if err != nil {
 			return err
 		}
+
+		// prefix the serviceaccount email with serviceAccount: for IAM
+		saWithPrefix := sa.Email.ApplyT(func(Email string) string {
+			return "serviceAccount:" + Email
+		}).(pulumi.StringOutput)
 
 		// make the serviceaccount a workload identity user
 		name := fmt.Sprintf("give-%s-workload-identity-user", serviceaccountname)
@@ -55,6 +49,15 @@ func main() {
 			return err
 		}
 
+		// give the serviceaccount permissions to the kubernetes cluster
+		_, err = projects.NewIAMMember(ctx, name, &projects.IAMMemberArgs{
+			Project: pulumi.String(projectId),
+			Role:    pulumi.String("roles/container.developer"),
+			Member:  saWithPrefix,
+		})
+		if err != nil {
+			return err
+		}
 		return nil
 	})
 }
