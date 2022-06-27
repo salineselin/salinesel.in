@@ -18,7 +18,7 @@ jobs:
       - name: download modules
         run: go mod download
 
-      - name: gcp auth
+      - name: login to gcp
         uses: google-github-actions/auth@v0.4.0
         with:
           credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
@@ -30,4 +30,4 @@ jobs:
         run: |
           NAMESPACE=salinesel-in
           POD=kubectl get pod -n ${NAMESPACE} -o jsonpath={.items..metadata.name}
-          kubectl cp /src ${NAMESPACE}/${POD}:/src
+          kubectl cp ./salinesel.in ${NAMESPACE}/${POD}:/salinesel.in
