@@ -37,6 +37,6 @@ spec:
               name: gce-disk
       volumes:
         - name: gce-disk
-          gcePersistentDisk:
-            pdName: salinesel-in-nfs-disk
-            fsType: ext4
+          nfs:
+            server: nfs-server.salinesel-in.svc.cluster.local
+            path: "/"

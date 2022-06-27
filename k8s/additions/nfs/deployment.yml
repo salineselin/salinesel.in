@@ -29,6 +29,5 @@ spec:
               name: mypvc
       volumes:
         - name: mypvc
-          gcePersistentDisk:
-            pdName: salinesel-in-nfs-disk
-            fsType: ext4
+          persistentVolumeClaim:
+            claimName: nfs
