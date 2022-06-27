@@ -22,7 +22,7 @@ spec:
           image: klakegg/hugo:0.101.0-ext-alpine
           workingDir: /salinesel.in
           command:
-            - hugo server -D
+            - hugo server
           resources:
             limits:
               memory: "128Mi"
