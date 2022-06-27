@@ -1,4 +1,4 @@
-name: seed-disk
+name: seed-nfs
 on:
   - workflow_dispatch
 
@@ -26,7 +26,7 @@ jobs:
       - name: build hugo
         run: hugo build
 
-      - name: seed the disk
+      - name: seed nfs
         run: |
           NAMESPACE=salinesel-in
           POD=seed-nfs
