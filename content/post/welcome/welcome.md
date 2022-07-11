@@ -3,10 +3,6 @@ title: "welcome to this website"
 description:
 date: 2022-07-11T16:12:18-06:00
 image:
-math:
-license:
-hidden: false
-comments: true
 slug: welcome
 tags:
   - welcome
