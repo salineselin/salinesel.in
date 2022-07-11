@@ -1,6 +1,0 @@
-name: salinesel.in
-runtime:
-  name: go
-description: A personal static site for salineselin
-main: pulumi
-stackConfigDir: pulumi
