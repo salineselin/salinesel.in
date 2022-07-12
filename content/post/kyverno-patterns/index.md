@@ -127,6 +127,8 @@ Truth be told most of the manifests you write are likely written and then rarely
 
 ### separate your kyverno installation from the underlying policies
 
+Respect that the policies you install are separate from the application that enforces the policies. They have divergent lifecycles, but should be respected as harmonious companions
+
 ### have some way to toggle rule actions between audit and enforcement
 
 If you're working with remote policies a lot, most of them are usually set to `audit` rather than `enforce`, so you'll need to make a transformation that changes the `validationFailureAction` value. I use this JSON patch:
