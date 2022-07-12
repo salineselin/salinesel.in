@@ -123,7 +123,7 @@ Debugging CI sucks. If your CI|CD pipeline is verbose and takes five minutes to 
 
 If that isn't soon enough and you're still experiencing pain with iteration, you could potentially use a git hook when you push source control changes to remote (similar to how [husky](https://www.npmjs.com/package/husky) does it) to get that feedback even sooner. I'd recommend only implementing a hook like this if the developers working on kubernetes manifests are acclimated to kubernetes and have their policies pulled down into their local dev cluster, or they're authenticated into a remote cluster with a context they can use to `--dry-run=server` against.
 
-Truth be told most of the manifests you write are likely written and then rarely touched, so iteration slow and frequent enough to cause admission controller heartache is likely nonexistent.
+Truth be told most of the manifests you write are likely written and then rarely touched, so iteration slow and frequent enough to cause admission controller heartache is likely seldom.
 
 ### separate your kyverno installation from the underlying policies
 
