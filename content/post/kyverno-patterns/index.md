@@ -4,7 +4,7 @@ description:
 date: 2022-07-11T16:12:18-06:00
 image: "pexels-photo-1169754.jpeg"
 slug: kyverno-patterns
-draft: true
+draft: false
 tags:
   - kubernetes
 ---
