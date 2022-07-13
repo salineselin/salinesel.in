@@ -26,6 +26,11 @@ If you're in the process of deciding what admisson controller to use in your env
 - When referencing remote policies, target a commit hash or branch version rather than the main branch's head
 - Avoid mutating resources with policies when possible
 
+## EXAMPLE
+
+I created this example github repository that illustrates all of the principles in this article
+https://github.com/salineselin/kyverno-example
+
 ## RECOMMENDATIONS
 
 The following sections expand on the gists described earlier
