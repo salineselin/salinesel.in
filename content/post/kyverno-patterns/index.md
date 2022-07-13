@@ -28,7 +28,7 @@ If you're in the process of deciding what admisson controller to use in your env
 
 ## RECOMMENDATIONS
 
-While not required, I highly recommend doing the following
+The following sections expand on the gists described earlier
 
 ### Have some way to whitelist resources
 
