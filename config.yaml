@@ -2,6 +2,8 @@ baseurl: https://salinesel.in
 languageCode: en-us
 paginate: 5
 title: Saline Selin
+author:
+  name: salineselin
 
 languages:
   en:
@@ -188,6 +190,11 @@ menu:
       url: https://github.com/salineselin
       params:
         icon: brand-github
+    - identifier: rss
+      name: RSS
+      url: https://salinesel.in/index.xml
+      params:
+        icon: rss
 
 related:
   includeNewer: true
