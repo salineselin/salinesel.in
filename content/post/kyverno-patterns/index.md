@@ -11,7 +11,7 @@ tags:
 
 Kyverno is an admission controller used to add policies to your cluster. The basic principle of an admission controller is to intercept incoming requests to a given kubernetes api server and check if a field matches an expression, then approve or deny the request based on that determination. If you're not familiar with admission controllers already, I'd recommend reading [the official documentation](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#what-are-they).
 
-If you're in the process of deciding what admisson controller to use in your environment, consider the background of the team that will be maintaining the policies. Do they all know how to program in Golang? If so, [OPA](https://www.openpolicyagent.org/) may be a better choice for you. I personally believe that Kyverno is a better admission controller because the barrier for reading and writing policies is significantly lower than OPA. I haven't run into a scenario where I need more verbose or complex syntax beyond what ships in kyverno by default.
+If you're in the process of deciding what admisson controller to use in your environment, consider the background of the team that will be maintaining the policies. Do they all know how to program in Golang? If so, [OPA](https://www.openpolicyagent.org/) may be a better choice for you. I personally believe that Kyverno is a better admission controller because the barrier for reading and writing policies is significantly lower than OPA. I haven't run into a scenario where I need more verbose or complex syntax beyond what ships in Kyverno by default.
 
 ## the gist
 
@@ -20,7 +20,7 @@ If you're in the process of deciding what admisson controller to use in your env
 - Narrow down the scope of your whitelists as much as possible
 - Configure all policies to accept an array of rules rather than a single ruleset
 - Have some way to unit test against admission controller policies when working with k8s manifests in a github repository
-- Separate your kyverno installation from the underlying policies
+- Separate your Kyverno installation from the underlying policies
 - Have some way to toggle rule actions between audit and enforcement
 - Add remote policies using raw.githubusercontent.com rather than copying them locally
 - When referencing remote policies, target a commit hash or branch version rather than the main branch's head
@@ -71,7 +71,7 @@ spec:
 
 ### Make all your changes with JSON patches
 
-This applies if you're using Kustomize to manage your kyverno transformations. Kustomize overlays are excellent at implicitly overlaying all the necessary parameters, but when you start working with array indexes more, you start wiping data that you don't intend to and you usually end up repeating yourself a lot. If you make all your transformations with JSON patches rather than overlays, you have a complete list of all your transformations, and debugging those transformations becomes a lot easier when kustomize executes and can explicitly point out a faulty JSON patch.
+This applies if you're using Kustomize to manage your Kyverno transformations. Kustomize overlays are excellent at implicitly overlaying all the necessary parameters, but when you start working with array indexes more, you start wiping data that you don't intend to and you usually end up repeating yourself a lot. If you make all your transformations with JSON patches rather than overlays, you have a complete list of all your transformations, and debugging those transformations becomes a lot easier when kustomize executes and can explicitly point out a faulty JSON patch.
 
 ### Narrow down the scope of your whitelists as much as possible
 
@@ -153,7 +153,7 @@ match:
       - Pod
 ```
 
-Almost all of the policies you find today in the [public kyverno policies repository](https://github.com/kyverno/policies) now use the array syntax by default, but it wasn't always that way. In [this earlier commit](https://github.com/kyverno/policies/commit/944498575e423eb98d4b31f6ae69e1e8161004c6#diff-77b3af0188557903b284d66fac9ef6be3532b5474ec9382c28f1ec8388f832d1) you can find remnants of when the configured rules did not use the array syntax.
+Almost all of the policies you find today in the [public Kyverno policies repository](https://github.com/kyverno/policies) now use the array syntax by default, but it wasn't always that way. In [this earlier commit](https://github.com/kyverno/policies/commit/944498575e423eb98d4b31f6ae69e1e8161004c6#diff-77b3af0188557903b284d66fac9ef6be3532b5474ec9382c28f1ec8388f832d1) you can find remnants of when the configured rules did not use the array syntax.
 
 ### Have some way to unit test against admission controller policies when working with k8s manifests in a github repository
 
@@ -163,7 +163,7 @@ If that isn't soon enough and you're still experiencing pain with iteration, you
 
 Truth be told most of the manifests you write are likely written and then rarely touched, so iteration slow and frequent enough to cause admission controller heartache is likely seldom.
 
-### Separate your kyverno installation from the underlying policies
+### Separate your Kyverno installation from the underlying policies
 
 Respect that the policies you install are separate from the application that enforces the policies. They have divergent lifecycles, but should be respected as harmonious companions
 
@@ -179,7 +179,7 @@ If you're working with remote policies a lot, most of them are usually set to `a
 
 ### Add remote policies using raw.githubusercontent.com rather than copying them locally
 
-Kustomize allows you to target local as well as remote resources too! Make use of the [kyverno/policies](https://github.com/kyverno/policies) repository and use those instead of rewriting what's likely already been written. An example kustomize manifest that uses remote resources looks like this:
+Kustomize allows you to target local as well as remote resources too! Make use of the [Kyverno/policies](https://github.com/kyverno/policies) repository and use those instead of rewriting what's likely already been written. An example kustomize manifest that uses remote resources looks like this:
 
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
