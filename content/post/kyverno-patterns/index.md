@@ -13,7 +13,7 @@ Kyverno is an admission controller used to add policies to your cluster. The bas
 
 If you're in the process of deciding what admisson controller to use in your environment, consider the background of the team that will be maintaining the policies. Do they all know how to program in Golang? If so, [OPA](https://www.openpolicyagent.org/) may be a better choice for you. I personally believe that Kyverno is a better admission controller because the barrier for reading and writing policies is significantly lower than OPA. I haven't run into a scenario where I need more verbose or complex syntax beyond what ships in Kyverno by default.
 
-## the gist
+## THE GIST
 
 - Have some way to whitelist resources
 - Make all your transformations with JSON patches
@@ -26,7 +26,9 @@ If you're in the process of deciding what admisson controller to use in your env
 - When referencing remote policies, target a commit hash or branch version rather than the main branch's head
 - Avoid mutating resources with policies when possible
 
-## recommendations
+## RECOMMENDATIONS
+
+While not required, I highly recommend doing the following
 
 ### Have some way to whitelist resources
 
