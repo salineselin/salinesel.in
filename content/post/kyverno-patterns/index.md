@@ -194,16 +194,10 @@ kind: Kustomization
 commonLabels:
   app: kyverno
 resources:
-  # rules
-  - https://raw.githubusercontent.com/kyverno/policies/952368d2083e511eb3128ee7f62aaf7ca36187f7/pod-security/baseline/disallow-capabilities/disallow-capabilities.yaml
-  - https://raw.githubusercontent.com/kyverno/policies/03460e044fa8aeff9e055ecae176518e7869ac5c/pod-security/baseline/disallow-host-namespaces/disallow-host-namespaces.yaml
-  - https://raw.githubusercontent.com/kyverno/policies/03460e044fa8aeff9e055ecae176518e7869ac5c/pod-security/baseline/disallow-host-path/disallow-host-path.yaml
-  - https://raw.githubusercontent.com/kyverno/policies/03460e044fa8aeff9e055ecae176518e7869ac5c/pod-security/baseline/disallow-host-ports/disallow-host-ports.yaml
-  - https://raw.githubusercontent.com/kyverno/policies/03460e044fa8aeff9e055ecae176518e7869ac5c/pod-security/baseline/disallow-privileged-containers/disallow-privileged-containers.yaml
-  - https://raw.githubusercontent.com/kyverno/policies/03460e044fa8aeff9e055ecae176518e7869ac5c/pod-security/baseline/disallow-proc-mount/disallow-proc-mount.yaml
-  - https://raw.githubusercontent.com/kyverno/policies/03460e044fa8aeff9e055ecae176518e7869ac5c/pod-security/baseline/disallow-selinux/disallow-selinux.yaml
-  - https://raw.githubusercontent.com/kyverno/policies/03460e044fa8aeff9e055ecae176518e7869ac5c/pod-security/baseline/restrict-apparmor-profiles/restrict-apparmor-profiles.yaml
-  - https://raw.githubusercontent.com/kyverno/policies/03460e044fa8aeff9e055ecae176518e7869ac5c/pod-security/baseline/restrict-sysctls/restrict-sysctls.yaml
+  # remote policies
+  - https://raw.githubusercontent.com/kyverno/policies/release-1.7/pod-security/baseline/disallow-capabilities/disallow-capabilities.yaml
+  - https://raw.githubusercontent.com/kyverno/policies/release-1.7/pod-security/baseline/disallow-host-namespaces/disallow-host-namespaces.yaml
+  - https://raw.githubusercontent.com/kyverno/policies/release-1.7/pod-security/baseline/disallow-host-ports/disallow-host-ports.yaml
   - https://raw.githubusercontent.com/kyverno/policies/097ca254c5d52d05bf1aa385d140e8743b9f21ba/best-practices/disallow_default_namespace/disallow_default_namespace.yaml
 ```
 
