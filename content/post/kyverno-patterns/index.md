@@ -164,11 +164,11 @@ Almost all of the policies you find today in the [public Kyverno policies reposi
 
 ### Have some way to unit test against admission controller policies when working with k8s manifests in a github repository
 
-Debugging CI sucks. If your CI|CD pipeline is verbose and takes five minutes to deploy something to a cluster, but it fails due to a failed policy check, it chisels at your soul. Feedback loops become repetitive, slow, and unfruitful. If you're using a CI provider like Github Actions, make a pipeline that runs a unit test using `kubectl apply -f /path/to/yaml --dry-run=server`
+Debugging CI sucks. If your CI|CD pipeline is verbose and takes five minutes to deploy something to a cluster, but it fails due to a failed policy check, it chisels at your soul. Feedback loops become repetitive, slow, and unfruitful. If you're using a CI provider like Github Actions, make a pipeline that runs a unit test using `kubectl apply -f /path/to/yaml --dry-run=server`. If this method is unpalatable for your use-case, it's worth looking into tools like [Datree](https://datree.io/) that offer admission controller unit testing. I personally don't use Datree because until they ship their own admission controller, there will always be a lack of parity between the policies Datree provides and the policies you provide in Kyverno.
 
 If that isn't soon enough and you're still experiencing pain with iteration, you could potentially use a git hook when you push source control changes to remote (similar to how [husky](https://www.npmjs.com/package/husky) does it) to get that feedback even sooner. I'd recommend only implementing a hook like this if the developers working on kubernetes manifests are acclimated to kubernetes and have their policies pulled down into their local dev cluster, or they're authenticated into a remote cluster with a context they can use to `--dry-run=server` against.
 
-Truth be told most of the manifests you write are likely written and then rarely touched, so iteration slow and frequent enough to cause admission controller heartache is likely seldom.
+Most of the manifests you write are likely written and then rarely touched, so iteration slow and frequent enough to cause admission controller heartache is likely seldom.
 
 ### Separate your Kyverno installation from the underlying policies
 
