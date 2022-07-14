@@ -37,7 +37,7 @@ The following sections expand on the gists described earlier
 
 ### Have some way to whitelist resources
 
-It is inevitable that you will have resources in your kubernetes clusters that violate policies. Defining some generic templatized process around how you add exceptions to a whitelist is crucial. You can whitelist resources using syntax with exceptions using the `exclude` key like so:
+It is inevitable that you will have resources in your kubernetes clusters that violate policies. Defining some generic templatized process around how you add exceptions to a whitelist is crucial. You can whitelist resources by using the `exclude` key like so:
 
 ```yaml
 apiVersion: kyverno.io/v1
